@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ec4899">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kawara Finance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff1f5;
+      --card: #ffffff;
+      --accent: #ec4899;
+      --accent-soft: #f9a8d4;
+      --accent-light: #fce7f3;
+      --text: #27272a;
+      --muted: #71717a;
+      --green: #16a34a;
+      --red: #dc2626;
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #fdf2f8, #fff1f5);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    .container { max-width: 1200px; margin: auto; }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+
+    .filter {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      background: var(--card);
+      padding: 10px;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+    }
+
+    .filter button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all .25s ease;
+    }
+
+    .filter button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: white;
+      box-shadow: 0 6px 18px rgba(236,72,153,.4);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.08);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0,0,0,.1);
+    }
+
+    .card h3 {
+      margin: 0 0 16px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .stat {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+
+    form { display: grid; gap: 14px; }
+
+    input, select {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--accent-light);
+      background: #fff;
+      font-size: 14px;
+    }
+
+    button.submit {
+      padding: 14px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(236,72,153,.4);
+      transition: transform .2s ease;
+    }
+
+    button.submit:hover {
+      transform: translateY(-1px);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+    th, td {
+      padding: 12px 6px;
+      border-bottom: 1px solid #fce7f3;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌸 Kawara Finance</h1>
+    <div class="subtitle">Dashboard keuangan pribadi — profesional, lembut, dan nyaman digunakan</div>
+
+    <div class="filter">
+      <button class="active" onclick="setRange('week', this)">Mingguan</button>
+      <button onclick="setRange('month', this)">Bulanan</button>
+      <button onclick="setRange('year', this)">Tahunan</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Total Pemasukan</h3>
+        <div class="stat green" id="incomeTotal">Rp 0</div>
+      </div>
+      <div class="card">
+        <h3>Total Pengeluaran</h3>
+        <div class="stat red" id="expenseTotal">Rp 0</div>
+      </div>
+      <div class="card">
+        <h3>Sisa Uang</h3>
+        <div class="stat" id="balanceTotal">Rp 0</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Tambah Transaksi</h3>
+        <form id="financeForm">
+          <select id="type">
+            <option value="income">Pemasukan</option>
+            <option value="expense">Pengeluaran</option>
+          </select>
+          <input type="text" id="category" placeholder="Kategori (Makan, Transport, dll)" required />
+          <input type="number" id="amount" placeholder="Jumlah (Rp)" required />
+          <button class="submit" type="submit">Simpan</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Grafik Keuangan</h3>
+        <canvas id="financeChart" height="180"></canvas>
+      </div>
+
+      
+
+      <div class="card">
+        <h3>Riwayat Transaksi</h3>
+        <table>
+          <thead>
+            <tr><th>Jenis</th><th>Kategori</th><th>Jumlah</th></tr>
+          </thead>
+          <tbody id="history"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">Kawara Studio © 2025</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const form = document.getElementById('financeForm');
+    const historyEl = document.getElementById('history');
+    const incomeEl = document.getElementById('incomeTotal');
+    const expenseEl = document.getElementById('expenseTotal');
+    const balanceEl = document.getElementById('balanceTotal');
+    const financeChartEl = document.getElementById('financeChart');
+    
+
+    let range = 'week';
+    let data = JSON.parse(localStorage.getItem('kawaraFinance')) || [];
+    let financeChart;
+
+    function setRange(r, btn) {
+      range = r;
+      document.querySelectorAll('.filter button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    }
+
+    function formatRupiah(num) {
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    function filteredData() {
+      const now = new Date();
+      return data.filter(item => {
+        const d = new Date(item.date);
+        if(range === 'week') return (now - d) / 86400000 <= 7;
+        if(range === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        if(range === 'year') return d.getFullYear() === now.getFullYear();
+      });
+    }
+
+    function render() {
+      const list = filteredData();
+      historyEl.innerHTML = '';
+
+      let income = 0, expense = 0;
+
+      list.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</td><td>${item.category}</td><td>${formatRupiah(item.amount)}</td>`;
+        historyEl.appendChild(tr);
+
+        if (item.type === 'income') income += item.amount;
+        else expense += item.amount;
+      });
+
+      incomeEl.textContent = formatRupiah(income);
+      expenseEl.textContent = formatRupiah(expense);
+      balanceEl.textContent = formatRupiah(income - expense);
+
+      if (financeChart) financeChart.destroy();
+      financeChart = new Chart(financeChartEl, {
+        type: 'doughnut',
+        data: {
+          labels: ['Pemasukan', 'Pengeluaran'],
+          datasets: [{ data: [income, expense] }]
+        }
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      data.push({
+        type: type.value,
+        category: category.value,
+        amount: Number(amount.value),
+        date: new Date()
+      });
+      localStorage.setItem('kawaraFinance', JSON.stringify(data));
+      form.reset();
+      render();
+    });
+
+    render();
+  </script>
+
+  <!-- SCRIPT UNTUK JADI APLIKASI -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+
+</body>
+</html>
