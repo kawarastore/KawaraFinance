@@ -1,17 +1,12 @@
 {
   "name": "Kawara Finance",
   "short_name": "Kawara",
-  "start_url": "./index.html",
+  "description": "Aplikasi pencatatan keuangan sederhana dan bisa dibuka secara offline",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#fff1f5",
+  "background_color": "#ffffff",
   "theme_color": "#ec4899",
-  "orientation": "portrait",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
